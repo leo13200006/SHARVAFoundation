@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "540855724787",
+    "firebase_url": "https://testingsharva.firebaseio.com",
+    "project_id": "testingsharva",
+    "storage_bucket": "testingsharva.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:540855724787:android:0a8f58b24b65f2ec182586",
+        "android_client_info": {
+          "package_name": "com.sharvafoundation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "540855724787-mq3v6lbi57m1ul8ms0uftci91tr2s7ki.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sharvafoundation",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "540855724787-jmhct2jofedov9u9961atr0j9me1eubf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRhq6casJc9hUeYC2d47oPEmsn7Zj-5Cs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "540855724787-jmhct2jofedov9u9961atr0j9me1eubf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
