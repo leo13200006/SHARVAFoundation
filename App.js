@@ -1,100 +1,104 @@
-import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Button, Text } from 'react-native'
-import admob, { MaxAdContentRating, AdEventType } from '@react-native-firebase/admob';
-import { InterstitialAd, RewardedAd, BannerAd, TestIds, BannerAdSize, RewardedAdEventType } from '@react-native-firebase/admob';
+import * as React from 'react';
+import { Button, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Icon from 'react-native-vector-icons/Ionicons';
+import LeaderBoard from './screens/LeaderboardScreen';
+import NewsletterScreen from './screens/NewsletterScreen'
 
-const adUnitId = TestIds.INTERSTITIAL;
-
-const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
-  requestNonPersonalizedAdsOnly: true,
-  keywords: ['fashion', 'clothing'],
-});
-
-const rewarded = RewardedAd.createForAdRequest(adUnitId, {
-  requestNonPersonalizedAdsOnly: true,
-  keywords: ['fashion', 'clothing'],
-});
-
-export default function App() {
-  const [loaded, setLoaded] = useState(false);
-
-  useState(() => {
-    admob()
-      .setRequestConfiguration({
-        maxAdContentRating: MaxAdContentRating.PG,
-        tagForChildDirectedTreatment: true,
-        tagForUnderAgeOfConsent: true,
-      })
-      .then(() => {
-        console.log('Done')
-      });
-  })
-
-  useEffect(() => {
-    const eventListener = interstitial.onAdEvent(type => {
-      if (type === AdEventType.LOADED) {
-        setLoaded(true);
-      }
-    });
-    interstitial.load();
-    return () => {
-      eventListener();
-    };
-  }, []);
-
-  useEffect(() => {
-    const eventListener = rewarded.onAdEvent((type, error, reward) => {
-      if (type === RewardedAdEventType.LOADED) {
-        setLoaded(true);
-      }
-
-      if (type === RewardedAdEventType.EARNED_REWARD) {
-        console.log('User earned reward of ', reward);
-      }
-    });
-    rewarded.load();
-    return () => {
-      eventListener();
-    };
-  }, []);
-
-
-
-  if (!loaded) {
-    return null;
-  }
-
+function DetailsScreen() {
   return (
-    <View style={styles.conatiner}>
-      <BannerAd unitId={TestIds.BANNER} 
-        size={BannerAdSize.SMART_BANNER}
-        requestOptions={{
-          requestNonPersonalizedAdsOnly: true,
-        }}
-     />
-     <Text></Text>
-      <Button
-        title="Show Interstitial"
-        onPress={() => {
-          interstitial.show();
-        }}
-      />
-      <Text></Text>
-      <Button
-        title="Show Rewarded Ad"
-        onPress={() => {
-          rewarded.show();
-        }}
-      />
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Details!</Text>
     </View>
-  )
+  );
 }
 
-const styles = StyleSheet.create({
-  conatiner: {
-    flex: 1,
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignItems: 'center',
-  }
-})
+function HomeScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Home screen</Text>
+      <Button
+        title="Go to Details"
+        onPress={() => navigation.navigate('Details')}
+      />
+    </View>
+  );
+}
+
+function SettingsScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Settings screen</Text>
+      <Button
+        title="Go to Details"
+        onPress={() => navigation.navigate('Details')}
+      />
+    </View>
+  );
+}
+
+const HomeStack = createStackNavigator();
+
+function HomeStackScreen() {
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen name="Home" component={HomeScreen} />
+      <HomeStack.Screen name="Details" component={DetailsScreen} />
+    </HomeStack.Navigator>
+  );
+}
+
+const SettingsStack = createStackNavigator();
+
+function SettingsStackScreen() {
+  return (
+    <SettingsStack.Navigator>
+      <SettingsStack.Screen name="Settings" component={SettingsScreen} />
+      <SettingsStack.Screen name="Details" component={DetailsScreen} />
+    </SettingsStack.Navigator>
+  );
+}
+
+const Tab = createBottomTabNavigator();
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+
+            if (route.name === 'Home') {
+              iconName = focused
+                ? 'ios-home-sharp'
+                : 'ios-home-outline';
+            } else if (route.name === 'Settings') {
+              iconName = focused ? 'ios-settings-sharp' : 'ios-settings-outline';
+            }
+            else if(route.name === 'Contribute') {
+              iconName = focused ? 'ios-wallet-sharp' : 'ios-wallet-outline';
+            }
+            else if(route.name === 'Notifications') {
+              iconName = focused ? 'ios-notifications-sharp' : 'ios-notifications-outline';
+            }
+
+            // You can return any component that you like here!
+            return <Icon name={iconName} size={size} color={color} />;
+          },
+        })}
+        tabBarOptions={{
+          activeTintColor: 'tomato',
+          inactiveTintColor: 'gray',
+        }}
+      >
+        <Tab.Screen name="Home" component={HomeStackScreen} />
+        <Tab.Screen name="Contribute" component={LeaderBoard} />
+        <Tab.Screen name="Notifications" component={NewsletterScreen} />
+        <Tab.Screen name="Settings" component={SettingsStackScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+}
