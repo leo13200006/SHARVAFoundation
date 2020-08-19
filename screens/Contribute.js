@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Button, Text } from 'react-native'
+import { StyleSheet, View, Button, Text, ActivityIndicator } from 'react-native'
 import admob, { MaxAdContentRating, AdEventType } from '@react-native-firebase/admob';
 import { InterstitialAd, RewardedAd, BannerAd, TestIds, BannerAdSize, RewardedAdEventType } from '@react-native-firebase/admob';
-import { NavigationContainer } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+// import { NavigationContainer } from '@react-navigation/native';
 const adUnitId = TestIds.INTERSTITIAL;
 
 const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
@@ -15,7 +16,7 @@ const rewarded = RewardedAd.createForAdRequest(adUnitId, {
   keywords: ['fashion', 'clothing'],
 });
 
-export default function LeaderBoard() {
+export default function Contribute() {
   const [loaded, setLoaded] = useState(false);
 
   useState(() => {
@@ -61,7 +62,9 @@ export default function LeaderBoard() {
 
 
   if (!loaded) {
-    return null;
+    <View style={[styles.container, styles.horizontal]}>
+    <ActivityIndicator size="large" color="#00ff00" />
+  </View>
   }
 
   return (
@@ -74,19 +77,25 @@ export default function LeaderBoard() {
         }}
      />
      <Text></Text>
-      <Button
-        title="Show Interstitial"
-        onPress={() => {
-          interstitial.show();
-        }}
-      />
+     <TouchableOpacity style={styles.btn} 
+      onPress={() => {
+        interstitial.show();
+        }}>
+        <Text style={styles.btnText}>
+        Show Interstitial
+        </Text>
+      </TouchableOpacity>
+      
       <Text></Text>
-      <Button
-        title="Show Rewarded Ad"
-        onPress={() => {
+      <TouchableOpacity style={styles.btn} 
+      onPress={() => {
           rewarded.show();
-        }}
-      />
+        }}>
+        <Text style={styles.btnText}>
+        Show Rewarded Ad
+        </Text>
+      </TouchableOpacity>
+      
     </View>
     
   )
@@ -98,5 +107,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
     alignItems: 'center',
+  },
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10
+  },
+  btn: {
+    width:220,
+    height:45,
+    borderRadius:25,
+    backgroundColor:'tomato',
+    justifyContent:'center',
+    marginTop:20,
+    marginHorizontal:25,
+  },
+  btnText:{
+    fontSize: 20,
+    textAlign:'center',
+    color: '#FAF9F6',
+    // fontWeight:'bold',
+    fontFamily:'Nunito-Bold'
+
   }
 })
