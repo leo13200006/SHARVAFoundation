@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native'
 export default function NewsletterScreen() {
     return (
         <View style={styles.conatiner}>
-            <Text>Newsletter Screen</Text>
+            <Text style={{fontFamily:'NunitoSans-ExtraBold',fontSize:20}}>Newsletter Screen</Text>
         </View>
     )
 }
