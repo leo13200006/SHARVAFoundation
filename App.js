@@ -9,8 +9,6 @@ import NewsletterScreen from './screens/NewsletterScreen'
 import HomeScreen from './screens/HomeScreen'
 import AboutScreen from './screens/AboutScreen'
 
-
-
 function SettingsScreen({ navigation }) {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

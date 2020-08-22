@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Button, Text, ActivityIndicator } from 'react-native'
+import { StyleSheet, View, Text, ActivityIndicator, TouchableOpacity, Alert } from 'react-native'
 import admob, { MaxAdContentRating, AdEventType } from '@react-native-firebase/admob';
 import { InterstitialAd, RewardedAd, BannerAd, TestIds, BannerAdSize, RewardedAdEventType } from '@react-native-firebase/admob';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 // import { NavigationContainer } from '@react-navigation/native';
-const adUnitId = TestIds.INTERSTITIAL;
+const adUnitIdInterstitial = __DEV__ ? TestIds.INTERSTITIAL : 'ca-app-pub-3394303418588880~2644318016';
+const adUnitIdRewarded = __DEV__ ? TestIds.REWARDED : 'ca-app-pub-3394303418588880~2644318016';
+const adUnitIdBannerAd = __DEV__ ? TestIds.BANNER : 'ca-app-pub-3394303418588880~2644318016';
 
-const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
+const interstitial = InterstitialAd.createForAdRequest(adUnitIdInterstitial, {
   requestNonPersonalizedAdsOnly: true,
   keywords: ['fashion', 'clothing'],
 });
 
-const rewarded = RewardedAd.createForAdRequest(adUnitId, {
+const rewarded = RewardedAd.createForAdRequest(TestIds.REWARDED, {
   requestNonPersonalizedAdsOnly: true,
   keywords: ['fashion', 'clothing'],
 });
 
 export default function Contribute() {
   const [loaded, setLoaded] = useState(false);
+  const [reBtn, setReBtn] = useState(false);
+  const [reIn, setReIn] = useState(false);
 
   useState(() => {
     admob()
@@ -32,19 +35,16 @@ export default function Contribute() {
   })
 
   useEffect(() => {
-    const eventListener = interstitial.onAdEvent(type => {
+    console.log('interstitial')
+    var eventListener = interstitial.onAdEvent(type => {
       if (type === AdEventType.LOADED) {
         setLoaded(true);
       }
     });
     interstitial.load();
-    return () => {
-      eventListener();
-    };
-  }, []);
 
-  useEffect(() => {
-    const eventListener = rewarded.onAdEvent((type, error, reward) => {
+    console.log('Reward')
+    eventListener = rewarded.onAdEvent((type, error, reward) => {
       if (type === RewardedAdEventType.LOADED) {
         setLoaded(true);
       }
@@ -53,15 +53,16 @@ export default function Contribute() {
         console.log('User earned reward of ', reward);
       }
     });
-    rewarded.load();
-    return () => {
-      eventListener();
-    };
-  }, []);
+    rewarded.load()
 
+    return(() => {
+      eventListener()
+    })
 
+  });
+  
 
-  if (!loaded) {
+  if (loaded) {
     <View style={[styles.container, styles.horizontal]}>
     <ActivityIndicator size="large" color="#00ff00" />
   </View>
@@ -70,32 +71,43 @@ export default function Contribute() {
   return (
     
     <View style={styles.conatiner}>
-      <BannerAd unitId={TestIds.BANNER} 
+      <BannerAd unitId={adUnitIdBannerAd} 
         size={BannerAdSize.SMART_BANNER}
         requestOptions={{
           requestNonPersonalizedAdsOnly: true,
         }}
      />
      <Text></Text>
-     <TouchableOpacity style={styles.btn} 
+     <TouchableOpacity style={!reIn ? styles.btn : styles.doneBtn} 
+      disabled={reIn}
       onPress={() => {
+        console.log('Pressed')
+        setReIn(true)
+        setTimeout(() => {
+          setReIn(false)
+        },10000)
         interstitial.show();
-        }}>
+      }}>
         <Text style={styles.btnText}>
         Show Interstitial
         </Text>
       </TouchableOpacity>
       
-      <Text></Text>
-      <TouchableOpacity style={styles.btn} 
+     <Text></Text>
+      <TouchableOpacity style={!reBtn ? styles.btn : styles.doneBtn} 
+      disabled={reBtn}
       onPress={() => {
+        console.log('Pressed')
+        setReBtn(true)
+        setTimeout(() => {
+          setReBtn(false)
+        },50000)
           rewarded.show();
-        }}>
+      }}>
         <Text style={styles.btnText}>
         Show Rewarded Ad
         </Text>
       </TouchableOpacity>
-      
     </View>
     
   )
@@ -129,5 +141,14 @@ const styles = StyleSheet.create({
     // fontWeight:'bold',
     fontFamily:'Nunito-Bold'
 
+  },
+  doneBtn: {
+    width:220,
+    height:45,
+    borderRadius:25,
+    backgroundColor:'grey',
+    justifyContent:'center',
+    marginTop:20,
+    marginHorizontal:25,
   }
 })

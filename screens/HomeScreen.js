@@ -1,10 +1,21 @@
 import React from 'react'
-import { StyleSheet, Text, View,Button ,TouchableOpacity} from 'react-native'
+import { StyleSheet, Text, View,TouchableOpacity} from 'react-native'
+import { BannerAd, TestIds, BannerAdSize } from '@react-native-firebase/admob';
+
+const adUnitIdBannerAd = __DEV__ ? TestIds.BANNER : 'ca-app-pub-3394303418588880~2644318016';
 
 export default function HomeScreen({ navigation }) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <View style={{justifyContent:'flex-start',paddingBottom:50}}>
+      <View style={{ flex: 1, alignContent: 'center', alignItems: 'center' }}>
+      <View style={{ justifyContent: 'flex-start', marginBottom: 200 }}>
+          <BannerAd unitId={adUnitIdBannerAd} 
+            size={BannerAdSize.SMART_BANNER}
+            requestOptions={{
+              requestNonPersonalizedAdsOnly: true,
+            }}
+        />
+      </View>
+      <View style={{justifyContent:'center',paddingBottom:50, }}>
         <Text style={styles.head}>Welcome to,</Text>
         <Text style={styles.head}>Sharva Foundation</Text>
         </View>
@@ -30,7 +41,7 @@ export default function HomeScreen({ navigation }) {
       justifyContent: "space-around",
       padding: 10
     },
-    head:{        
+    head:{     
         fontFamily:"NunitoSans-ExtraBold",
         fontSize:30,
         textAlign:'center',
